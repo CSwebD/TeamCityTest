@@ -49,22 +49,16 @@ object BuildAndTest : BuildType({
             name = "Install Dependencies"
             id = "nodejs_runner"
             shellScript = "npm install"
-            dockerImagePlatform = NodeJSBuildStep.ImagePlatform.Windows
-            dockerPull = true
-            dockerRunParameters = """--rm --memory="512m""""
         }
         nodeJS {
             name = "Run Tests"
             id = "nodejs_runner_1"
             shellScript = "npm run test"
-            dockerImagePlatform = NodeJSBuildStep.ImagePlatform.Windows
-            dockerRunParameters = """--rm --memory="512m""""
         }
         nodeJS {
             name = "Build Application"
             id = "nodejs_runner_2"
             shellScript = "npm run build"
-            dockerImagePlatform = NodeJSBuildStep.ImagePlatform.Windows
         }
     }
 
