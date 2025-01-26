@@ -13,8 +13,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "buffer": "^6.0.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.4"
   },
   "devDependencies": {
     "jest": "^29.7.0",
