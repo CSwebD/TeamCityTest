@@ -2,22 +2,32 @@ import jetbrains.buildServer.configs.kotlin.*
 import jetbrains.buildServer.configs.kotlin.buildSteps.nodeJS
 import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 
+/*
+This Kotlin DSL script defines two build configurations:
+1. Build and Test with Docker (original).
+2. Build and Test Without Docker (new, simplified configuration).
+*/
+
+// Define the project
 project {
+    // Register the VCS root
     vcsRoot(HttpsGithubComCSwebDTeamCityTestGitRefsHeadsMain)
 
-    // Original build configuration
-    buildType(BuildAndTest)
-
-    // New build configuration without Docker
-    buildType(BuildAndTestNoDocker)
+    // Register the build configurations
+    buildType(BuildAndTestWithDocker)
+    buildType(BuildAndTestWithoutDocker)
 }
 
-// Original Build Configuration
-object BuildAndTest : BuildType({
+// Build Configuration: With Docker
+object BuildAndTestWithDocker : BuildType({
     name = "Build and Test with Docker"
+
+    // Associate the VCS root
     vcs {
         root(HttpsGithubComCSwebDTeamCityTestGitRefsHeadsMain)
     }
+
+    // Build steps
     steps {
         nodeJS {
             name = "Install Dependencies"
@@ -33,12 +43,16 @@ object BuildAndTest : BuildType({
     }
 })
 
-// New Build Configuration Without Docker
-object BuildAndTestNoDocker : BuildType({
+// Build Configuration: Without Docker
+object BuildAndTestWithoutDocker : BuildType({
     name = "Build and Test Without Docker"
+
+    // Associate the VCS root
     vcs {
         root(HttpsGithubComCSwebDTeamCityTestGitRefsHeadsMain)
     }
+
+    // Build steps
     steps {
         nodeJS {
             name = "Install Dependencies"
@@ -55,7 +69,7 @@ object BuildAndTestNoDocker : BuildType({
     }
 })
 
-// Git VCS Root
+// Define the Git VCS root
 object HttpsGithubComCSwebDTeamCityTestGitRefsHeadsMain : GitVcsRoot({
     name = "TeamCityTest Main Branch"
     url = "https://github.com/CSwebD/TeamCityTest.git"
