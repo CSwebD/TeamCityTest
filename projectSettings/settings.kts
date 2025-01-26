@@ -1,38 +1,44 @@
 import jetbrains.buildServer.configs.kotlin.*
-import jetbrains.buildServer.configs.kotlin.buildFeatures.perfmon
-import jetbrains.buildServer.configs.kotlin.buildSteps.NodeJSBuildStep
 import jetbrains.buildServer.configs.kotlin.buildSteps.nodeJS
-import jetbrains.buildServer.configs.kotlin.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.vcs.GitVcsRoot
 
-/*
-This Kotlin DSL script defines a TeamCity project hierarchy.
-It includes VCS roots, build types, and configurations.
-
-To debug or generate settings locally:
-- Use Maven with the TeamCity configs plugin.
-- Open this file in IntelliJ IDEA for further debugging.
-*/
-
-version = "2024.12"
-
 project {
-    // Register the VCS root
     vcsRoot(HttpsGithubComCSwebDTeamCityTestGitRefsHeadsMain)
 
-    // Define the build configuration
+    // Original build configuration
     buildType(BuildAndTest)
+
+    // New build configuration without Docker
+    buildType(BuildAndTestNoDocker)
 }
 
+// Original Build Configuration
 object BuildAndTest : BuildType({
-    name = "Build and Test" // Build configuration name
-
-    // Associate the VCS root
+    name = "Build and Test with Docker"
     vcs {
         root(HttpsGithubComCSwebDTeamCityTestGitRefsHeadsMain)
     }
+    steps {
+        nodeJS {
+            name = "Install Dependencies"
+            shellScript = "npm install"
+            dockerImagePlatform = NodeJSBuildStep.ImagePlatform.Windows
+            dockerPull = true
+        }
+        nodeJS {
+            name = "Run Tests"
+            shellScript = "npm run test"
+            dockerImagePlatform = NodeJSBuildStep.ImagePlatform.Windows
+        }
+    }
+})
 
-    // Define build steps
+// New Build Configuration Without Docker
+object BuildAndTestNoDocker : BuildType({
+    name = "Build and Test Without Docker"
+    vcs {
+        root(HttpsGithubComCSwebDTeamCityTestGitRefsHeadsMain)
+    }
     steps {
         nodeJS {
             name = "Install Dependencies"
@@ -47,25 +53,12 @@ object BuildAndTest : BuildType({
             shellScript = "npm run build"
         }
     }
-
-    // Add a VCS trigger to build on changes
-    triggers {
-        vcs {
-            quietPeriodMode = VcsTrigger.QuietPeriodMode.USE_DEFAULT
-            branchFilter = "+:refs/heads/main"
-        }
-    }
-
-    // Enable performance monitoring
-    features {
-        perfmon { }
-    }
 })
 
-// Define the Git VCS root
+// Git VCS Root
 object HttpsGithubComCSwebDTeamCityTestGitRefsHeadsMain : GitVcsRoot({
     name = "TeamCityTest Main Branch"
     url = "https://github.com/CSwebD/TeamCityTest.git"
     branch = "refs/heads/main"
-    branchSpec = "refs/heads/*" // Monitor all branches
+    branchSpec = "refs/heads/*"
 })
