@@ -6,10 +6,11 @@
   "scripts": {
     "start": "node app.js",
     "test": "jest --coverage",
+    "test:coverage": "jest --coverage",
+    "test:performance": "node performance-tests.js",
     "build": "echo 'Building application...' && exit 0",
-    "dev": "nodemon app.js",
-    "test:performance": "node performance-tests.js"
-},
+    "dev": "nodemon app.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
