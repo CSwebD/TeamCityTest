@@ -7,8 +7,9 @@
     "start": "node app.js",
     "test": "jest --coverage",
     "build": "echo 'Building application...' && exit 0",
-    "dev": "nodemon app.js"
-  },
+    "dev": "nodemon app.js",
+    "test:performance": "node performance-tests.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
